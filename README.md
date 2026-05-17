@@ -37,33 +37,38 @@ The frontend communicates with the Django REST API using JWT authentication.
 ## Project structure
 
 ```
-blog_api/
-├── blog/
-│   ├── models.py       # Post, Comment, Category, Tag, Like, Bookmark
-│   ├── serializers.py  # List, Detail, Create/Update serialisers
-│   ├── views.py        # All blog views (CBVs)
-│   ├── permissions.py  # IsAuthorOrReadOnly
-│   ├── filters.py      # PostFilter (django-filter)
-│   └── urls.py         # /api/posts/* /api/comments/* routes
+blog_website_api/
 │
-├── users/
-│   ├── models.py       # Custom User (email login)
-│   ├── serializers.py  # Register, Profile, Token serialisers
-│   ├── views.py        # Register, Login, Logout, Profile views
-│   └── urls.py         # /api/auth/* routes
-│
-├── config/
-│   ├── settings.py   # All Django + DRF + JWT config
-│   └── urls.py       # Root URL router
+├── blog_api/
+│   │
+│   ├── blog/
+│   │   ├── models.py         # Post, Comment, Category, Tag, Like, Bookmark models
+│   │   ├── serializers.py    # DRF serializers for posts/comments/categories
+│   │   ├── views.py          # API views for posts, comments, likes, bookmarks
+│   │   ├── permissions.py    # Custom permissions (IsAuthorOrReadOnly)
+│   │   ├── filters.py        # Search/filter logic using django-filter
+│   │   └── urls.py           # Blog-related API routes
+│   │
+│   ├── users/
+│   │   ├── models.py         # Custom User model with email authentication
+│   │   ├── serializers.py    # Register, Login, Profile serializers
+│   │   ├── views.py          # Auth & profile API views
+│   │   └── urls.py           # Authentication routes
+│   │
+│   ├── config/
+│   │   ├── settings.py       # Django settings, DRF, JWT, DB configuration
+│   │   └── urls.py           # Root URL configuration
+│   │
+│   ├── manage.py             # Django project entry point
+│   └── requirements.txt      # Python dependencies
 │
 ├── frontend/
-│   ├── index.html
-│   ├── app.js
-│   └── style.css
+│   ├── index.html            # Frontend entry page
+│   ├── app.js                # Frontend API integration logic
+│   └── style.css             # Frontend styling
 │
-├── manage.py
-├── requirements.txt
-├── README.md
+├── .gitignore                # Ignored files/folders for Git
+└── README.md                 # Project documentation
 ```
 
 
