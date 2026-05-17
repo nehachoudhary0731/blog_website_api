@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>BlogSpace</title>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+
+  <!-- ── NAVBAR ─────────────────────────────────────────── -->
+  <nav class="navbar">
+    <a href="#" class="logo" onclick="showPage('home')">BlogSpace</a>
+    <div class="nav-links" id="navLinks">
+      <a href="#" onclick="showPage('home')">Home</a>
+      <a href="#" onclick="showPage('home')">Posts</a>
+      <!-- shown when logged OUT -->
+      <a href="#" id="navLogin" onclick="showPage('login')">Login</a>
+      <a href="#" id="navRegister" onclick="showPage('register')" class="btn-primary">Register</a>
+      <!-- shown when logged IN -->
+      <a href="#" id="navWrite" onclick="showPage('write')" style="display:none">Write</a>
+      <a href="#" id="navDashboard" onclick="showPage('dashboard')" style="display:none">My Posts</a>
+      <span id="navUser" style="display:none; color:#555; font-size:14px"></span>
+      <a href="#" id="navLogout" onclick="logout()" style="display:none">Logout</a>
+    </div>
+  </nav>
+
+  <!-- ── PAGES (only one visible at a time) ────────────── -->
+
+  <!-- HOME PAGE -->
+  <div id="page-home" class="page active">
+    <div class="hero">
+      <h1>Ideas worth reading.</h1>
+      <p>A space for developers to write, share, and learn together.</p>
+      <input class="search-box" type="text" placeholder="Search posts..." id="searchInput" oninput="searchPosts()"/>
+    </div>
+
+    <!-- Filter by tag -->
+    <div class="container">
+      <div class="tag-filter" id="tagFilter"></div>
+
+      <!-- Post cards grid -->
+      <div class="posts-grid" id="postsGrid"></div>
+
+      <!-- Pagination -->
+      <div class="pagination" id="pagination"></div>
+    </div>
+  </div>
+
+  <!-- POST DETAIL PAGE -->
+  <div id="page-post" class="page">
+    <div class="container narrow">
+      <button class="back-btn" onclick="showPage('home')">← Back</button>
+      <div id="postDetail"></div>
+
+      <!-- Comments section -->
+      <div class="comments-section">
+        <h3>Comments (<span id="commentCount">0</span>)</h3>
+
+        <!-- Add comment form (only if logged in) -->
+        <div id="commentForm" style="display:none">
+          <textarea id="commentInput" placeholder="Write a comment..." rows="3"></textarea>
+          <button class="btn-primary" onclick="addComment()">Post Comment</button>
+        </div>
+        <p id="commentLoginMsg" style="color:#888; font-size:14px">
+          <a href="#" onclick="showPage('login')">Login</a> to leave a comment.
+        </p>
+
+        <div id="commentsList"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LOGIN PAGE -->
+  <div id="page-login" class="page">
+    <div class="auth-box">
+      <h2>Welcome back</h2>
+      <p class="auth-sub">Log in to your account</p>
+      <div id="loginError" class="error-msg"></div>
+
+      <label>Email</label>
+      <input type="email" id="loginEmail" placeholder="you@example.com"/>
+
+      <label>Password</label>
+      <input type="password" id="loginPassword" placeholder="••••••••"/>
+
+      <button class="btn-primary full" onclick="login()">Log In</button>
+      <p class="auth-switch">Don't have an account? <a href="#" onclick="showPage('register')">Register</a></p>
+    </div>
+  </div>
+
+  <!-- REGISTER PAGE -->
+  <div id="page-register" class="page">
+    <div class="auth-box">
+      <h2>Create account</h2>
+      <p class="auth-sub">Join the community</p>
+      <div id="registerError" class="error-msg"></div>
+
+      <label>Username</label>
+      <input type="text" id="regUsername" placeholder="cooldev"/>
+
+      <label>Email</label>
+      <input type="email" id="regEmail" placeholder="you@example.com"/>
+
+      <label>Password</label>
+      <input type="password" id="regPassword" placeholder="••••••••"/>
+
+      <label>Confirm Password</label>
+      <input type="password" id="regPassword2" placeholder="••••••••"/>
+
+      <button class="btn-primary full" onclick="register()">Create Account</button>
+      <p class="auth-switch">Already have an account? <a href="#" onclick="showPage('login')">Log in</a></p>
+    </div>
+  </div>
+
+  <!-- WRITE / EDIT POST PAGE -->
+  <div id="page-write" class="page">
+    <div class="container narrow">
+      <h2 id="writeTitle">Write a new post</h2>
+      <div id="writeError" class="error-msg"></div>
+
+      <label>Title</label>
+      <input type="text" id="postTitle" placeholder="Your post title..."/>
+
+      <label>Excerpt <span class="hint">(short summary shown in listings)</span></label>
+      <input type="text" id="postExcerpt" placeholder="One-line summary..."/>
+
+      <label>Content</label>
+      <textarea id="postContent" placeholder="Write your post here..." rows="14"></textarea>
+
+      <label>Category</label>
+      <select id="postCategory">
+        <option value="">-- No category --</option>
+      </select>
+
+      <label>Tags <span class="hint">(comma separated)</span></label>
+      <input type="text" id="postTags" placeholder="python, tutorial, django"/>
+
+      <label>Status</label>
+      <select id="postStatus">
+        <option value="draft">Draft</option>
+        <option value="published">Published</option>
+      </select>
+
+      <div class="write-actions">
+        <button class="btn-secondary" onclick="showPage('dashboard')">Cancel</button>
+        <button class="btn-primary" onclick="savePost()">Save Post</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MY POSTS DASHBOARD -->
+  <div id="page-dashboard" class="page">
+    <div class="container">
+      <div class="dashboard-header">
+        <h2>My Posts</h2>
+        <button class="btn-primary" onclick="newPost()">+ New Post</button>
+      </div>
+      <div id="myPostsList"></div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
